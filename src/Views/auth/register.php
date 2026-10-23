@@ -12,6 +12,7 @@
     <?php endif; ?>
 
     <form action="/register" method="POST">
+        <?= \App\Core\Csrf::field() ?>
         <label>Nombre <input type="text" name="nombre" required></label><br>
         <label>Email <input type="email" name="email" required></label><br>
         <label>Contraseña <input type="password" name="password" minlength="6" required></label><br>

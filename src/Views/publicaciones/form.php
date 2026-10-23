@@ -19,6 +19,7 @@ $action = $editando ? '/publicaciones/' . $publicacion['id'] . '/editar' : '/pub
     <?php endif; ?>
 
     <form action="<?= $action ?>" method="POST">
+        <?= \App\Core\Csrf::field() ?>
         <label>Título <input type="text" name="titulo" maxlength="200" required
             value="<?= htmlspecialchars($publicacion['titulo'] ?? '') ?>"></label><br>
         <label>Categoría <input type="text" name="categoria" maxlength="50" required

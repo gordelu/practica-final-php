@@ -15,6 +15,7 @@
     <?php if ($userId === (int) $publicacion['usuario_id']): ?>
         <a href="/publicaciones/<?= $publicacion['id'] ?>/editar">Editar</a>
         <form action="/publicaciones/<?= $publicacion['id'] ?>/borrar" method="POST" style="display: inline;">
+            <?= \App\Core\Csrf::field() ?>
             <button type="submit" onclick="return confirm('¿Borrar la publicación?')">Borrar</button>
         </form>
     <?php endif; ?>
@@ -28,6 +29,7 @@
 
             <?php if ($userId === (int) $c['usuario_id']): ?>
                 <form action="/comentarios/<?= $c['id'] ?>/borrar" method="POST">
+                    <?= \App\Core\Csrf::field() ?>
                     <button type="submit">Borrar comentario</button>
                 </form>
             <?php endif; ?>
@@ -36,6 +38,7 @@
 
     <?php if ($userId): ?>
         <form action="/publicaciones/<?= $publicacion['id'] ?>/comentarios" method="POST">
+            <?= \App\Core\Csrf::field() ?>
             <textarea name="contenido" rows="3" required></textarea><br>
             <button type="submit">Comentar</button>
         </form>

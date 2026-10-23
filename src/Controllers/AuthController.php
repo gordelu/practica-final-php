@@ -38,7 +38,7 @@ class AuthController
             $this->user->insert([
                 'nombre' => $nombre,
                 'email' => $email,
-                'password' => password_hash($password, PASSWORD_DEFAULT),
+                'password' => $password, // Usuario::insert ya la hashea
             ]);
         } catch (PDOException $e) {
             // 23000: el email ya existe (columna UNIQUE)
