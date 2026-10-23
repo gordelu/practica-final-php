@@ -31,7 +31,10 @@ abstract class BaseModel
     public function insert(array $data): int
     {
         $data = $this->filter($data);
+        // implode(separador, array): une los elementos del array en un string con el separador entre ellos
+        // array_keys(array): devuelve un array solo con las claves del array
         $columns = implode(', ', array_keys($data));
+        // implode(separador, array): une los elementos del array en un string con el separador entre ellos
         $placeholders = ':' . implode(', :', array_keys($data));
 
         $this->db->execute(
@@ -47,6 +50,9 @@ abstract class BaseModel
 
         // Convierte cada columna en "columna = :columna" y las une con comas.
         // Ej: ['titulo' => 'x', 'cuerpo' => 'y'] -> "titulo = :titulo, cuerpo = :cuerpo"
+        // implode(separador, array): une los elementos del array en un string con el separador entre ellos
+        // array_map(función, array): aplica la función a cada elemento del array y devuelve un array nuevo con los resultados
+        // array_keys(array): devuelve un array solo con las claves del array
         $set = implode(', ', array_map(fn($col) => "$col = :$col", array_keys($data)));
 
         // Añade el id a los parámetros para rellenar el :id del WHERE
@@ -71,15 +77,20 @@ abstract class BaseModel
     // Solo deja pasar columnas de $fillable para evitar inyección en los nombres de columna
     protected function filter(array $data): array
     {
-        // array_flip convierte ['nombre', 'email'] en ['nombre' => 0, 'email' => 1]
-        // para que array_intersect_key se quede solo con las claves de $data que están en $fillable.
+        $filtrado = [];
+
+        // Recorre los datos y se queda solo con las columnas que están en $fillable
         // Ej: ['nombre' => 'Ana', 'rol' => 'admin'] -> ['nombre' => 'Ana']
-        $data = array_intersect_key($data, array_flip($this->fillable));
+        foreach ($data as $columna => $valor) {
+            if (in_array($columna, $this->fillable)) {
+                $filtrado[$columna] = $valor;
+            }
+        }
 
         // Si no queda ninguna columna válida, la consulta SQL quedaría mal formada
-        if (empty($data)) {
+        if (empty($filtrado)) {
             throw new \InvalidArgumentException('No hay columnas válidas para ' . $this->table);
         }
-        return $data;
+        return $filtrado;
     }
 }
